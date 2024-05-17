@@ -12,39 +12,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['username']) && isset($
         exit();
     }
 
+    // 密码加密
+    $hashed_pass = password_hash($pass, PASSWORD_DEFAULT);
+
     $host = '127.0.0.1';
-    $username = 'root';
-    $password = 'root';
+    $db_username = 'root';
+    $db_password = 'root';
     $db = 'js-login';
 
-    header('content-type:text/html;charset=utf-8;');
+    header('Content-Type: text/html; charset=utf-8');
 
-    $conn = mysqli_connect($host, $username, $password, $db);
+    $conn = mysqli_connect($host, $db_username, $db_password, $db);
 
     if (!$conn) {
         die("连接失败: " . mysqli_connect_error());
     }
 
-    // 检查用户是否存在
-    $sql = "SELECT * FROM `userinfo` WHERE `username`='$name'";
-    $res = mysqli_query($conn, $sql);
+    // 检查用户名是否存在
+    $stmt = $conn->prepare("SELECT * FROM `userinfo` WHERE `username` = ?");
+    $stmt->bind_param("s", $name);
+    $stmt->execute();
+    $res = $stmt->get_result();
 
     if (mysqli_num_rows($res) > 0) {
         echo "<script>alert('用户名已存在'); window.location.href = 'register.html';</script>";
     } else {
         // 用户不存在，进行注册
-        $sql = "INSERT INTO `userinfo` (`username`, `password`,`email`,`phone`)
-VALUES ('$name', '$pass','$email','$phone')";
+        $stmt = $conn->prepare("INSERT INTO `userinfo` (`username`, `password`, `email`, `phone`) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $name, $hashed_pass, $email, $phone);
 
-if (mysqli_query($conn, $sql)) {
-    echo "<script>alert('注册成功'); window.location.href = 'login.html';</script>";
-} else {
-    echo "<script>alert('注册失败'); window.location.href = 'register.html';</script>";
-}
-}
+        if ($stmt->execute()) {
+            echo "<script>alert('注册成功'); window.location.href = 'login.html';</script>";
+        } else {
+            echo "<script>alert('注册失败'); window.location.href = 'register.html';</script>";
+        }
+    }
 
-mysqli_close($conn);
+    $stmt->close();
+    mysqli_close($conn);
 } else {
-echo "<script>alert('无效请求'); window.location.href = 'register.html';</script>";
+    echo "<script>alert('无效请求'); window.location.href = 'register.html';</script>";
 }
 ?>
