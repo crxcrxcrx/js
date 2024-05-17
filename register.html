@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>音乐网站 - 注册</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* 滑块验证样式 */
+        .slider {
+            position: relative;
+            width: 300px;
+            height: 50px;
+            background-color: #ccc;
+            border-radius: 25px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        .slider .track {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: #00bfff;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 头部 -->
+    <header class="header">
+        <div class="w nav">
+            <!-- 解除注释即可 -->
+            <!-- <a href="#" class="logo">
+                <img src="images/logo1.png" alt="">
+            </a> -->
+            <!-- 删除这行即可去除广告 -->
+            <a href="#" class="logo-bili">
+                <div class="avatarBox">
+                    <img src="./images/logo.png" alt="" class="avatarImg">
+                    <div class="avatarBoder">
+                        <img src="./images/boder.webp" alt="">
+                    </div>
+                </div>
+            </a>
+            <ul class="nav-meau">
+                <li><a href="index.html">音乐馆</a></li>
+                <li><a href="singer.html">歌手</a></li>
+                <li><a href="song-list.html">歌单</a></li>
+                <li><a href="song.html">歌曲</a></li>
+                <li><a href="login.html">登录</a></li>
+                <li class="active"><a href="register.html">注册</a></li>
+                <li><a href="message.php">给我们留言</a></li>
+            </ul>
+            <div class="search">
+                <input type="text" name="" id="" placeholder="音乐、MV、歌手等"><button>搜索</button>
+            </div>
+        </div>
+    </header>
+    <!-- 注册 主体 -->
+    <div class="contentLogin py-3 bg1">
+        <div class="login">
+            <h2>注册</h2>
+            <!-- 添加注册表单 -->
+            <form id="registerForm" action="register.php" method="post">
+                <div class="ipt">
+                    <input type="text" name="username" id="username" placeholder="用户名" required>
+                </div>
+                <div class="ipt">
+                    <input type="text" name="email" id="email" placeholder="邮箱" required>
+                </div>
+                <div class="ipt">
+                    <input type="text" name="phone" id="phone" placeholder="手机号" required>
+                </div>
+                <div class="ipt">
+                    <input type="password" name="password" id="password" placeholder="密码" required>
+                </div>
+                <div class="ipt">
+                    <input type="password" name="confirm_password" id="confirm_password" placeholder="确认密码" required>
+                </div>
+                <div class="slider" id="slider">
+                    <div class="track" id="track"></div>
+                </div>
+                <button type="submit" id="submitBtn" disabled>注册</button>
+            </form>
+        </div>
+    </div>
+    <!-- 底部1 -->
+    <footer class="footer py-3">
+        <div class="w">
+            <div class="links">
+                <div class="tit">友情链接</div>
+                <a href="#">哔哩哔哩</a>
+                <a href="#">淘宝店铺</a>
+                <a href="#">拼多多店铺</a>
+                <a href="#">闲鱼店铺</a>
+                <a href="#">
+                    微信
+                    <div class="hide">
+                        <img src="#" alt="">
+                    </div>
+                </a>
+                <a href="#">
+                    QQ
+                    <div class="hide">
+                        <img src="#" alt="">
+                    </div>
+                </a>
+                <a href="#">
+                    抖音
+                    <div class="hide">
+                        <img src="#" alt="">
+                    </div>
+                </a>
+                <a href="#">小红书</a>
+                <p class="mt-2">Copyright © 1998 - 2022 Musi. All Rights Reserved.</p>
+            </div>
+            <div class="copy">
+                <div class="tit">合作伙伴</div>
+                <div class="list">
+                    <div class="item">
+                        <img src="./images/bili-1.png" alt="">
+                        <p>三连协会</p>
+                    </div>
+                    <div class="item">
+                        <img src="./images/bili-2.png" alt="">
+                        <p>白嫖没对象协会</p>
+                    </div>
+                    <div class="item">
+                        <img src="./images/bili-3.png" alt="">
+                        <p>吃瓜群众协会</p>
+                    </div>
+                    <div class="item">
+                        <img src="./images/bili-4.png" alt="">
+                        <p>小破站协会</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const slider = document.getElementById('slider');
+            const track = document.getElementById('track');
+            const submitBtn = document.getElementById('submitBtn');
+
+            let isDragging = false;
+            let startX, offsetX;
+
+            track.addEventListener('mousedown', function (e) {
+                isDragging = true;
+                startX = e.clientX - track.offsetLeft;
+            });
+
+            document.addEventListener('mousemove', function (e) {
+                if (isDragging) {
+                    offsetX = e.clientX - startX;
+                    if (offsetX < 0) offsetX = 0;
+                    if (offsetX > 250) offsetX = 250;
+                    track.style.left = offsetX + 'px';
+                }
+            });
+
+            document.addEventListener('mouseup', function () {
+                if (isDragging) {
+                    isDragging = false;
+                    if (offsetX >= 250) {
+                        alert('验证通过');
+                        submitBtn.disabled = false;
+                    } else {
+                        track.style.left = '0px';
+                    }
+                }
+            });
+
+            document.getElementById('registerForm').addEventListener('submit', function (e) {
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                const email = document.getElementById('email').value;
+                const phone = document.getElementById('phone').value;
+                const confirmPassword = document.getElementById('confirm_password').value;
+
+                // 手机号/邮箱校验
+                const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+                const phonePattern = /^[1][3-9][0-9]{9}$/;
+
+                if (!emailPattern.test(email) && !phonePattern.test(phone)) {
+                    alert('请输入有效的邮箱或手机号');
+                    e.preventDefault();
+                    return;
+                }
+
+                // 密码长度校验
+                if (password.length < 6) {
+                    alert('密码长度必须至少为6位');
+                    e.preventDefault();
+                    return;
+                }
+
+                // 确认密码校验
+                if (password !== confirmPassword) {
+                    alert('两次输入的密码不一致');
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
